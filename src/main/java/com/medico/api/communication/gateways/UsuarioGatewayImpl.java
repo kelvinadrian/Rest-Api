@@ -3,7 +3,9 @@ package com.medico.api.communication.gateways;
 import com.medico.api.adapters.interfaces.datasources.UsuarioRepository;
 import com.medico.api.adapters.interfaces.gateway.UsuarioGateway;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class UsuarioGatewayImpl implements UsuarioGateway {
 
     final UsuarioRepository usuarioRepository;
