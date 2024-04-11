@@ -10,4 +10,8 @@ public interface MedicoGateway {
 
     void save(Medico medico);
     Page<Medico> findAll(Pageable page);
+
+    Medico getReferenceById(Long id);
+
+    void delete(Long id);
 }

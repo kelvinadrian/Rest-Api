@@ -29,4 +29,15 @@ public class MedicoGatewayImpl implements MedicoGateway {
     public Page<Medico> findAll(Pageable page) {
         return medicoRepository.findAll(page);
     }
+
+    @Override
+    public Medico getReferenceById(Long id) {
+        return medicoRepository.getReferenceById(id);
+    }
+
+    @Override
+    @Transactional
+    public void delete(Long id) {
+        medicoRepository.deleteById(id);
+    }
 }

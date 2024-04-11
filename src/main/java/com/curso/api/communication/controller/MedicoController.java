@@ -1,22 +1,21 @@
 package com.curso.api.communication.controller;
 
 import com.curso.api.adapters.builders.MedicoBuilder;
+import com.curso.api.adapters.dto.request.DadosAtualizarMedico;
 import com.curso.api.adapters.dto.request.DadosCadastroMedico;
 import com.curso.api.adapters.dto.response.DadosResponseMedico;
 import com.curso.api.adapters.interfaces.gateway.MedicoGateway;
 import com.curso.api.adapters.interfaces.usecases.MedicoUseCase;
-import com.curso.api.core.entity.Medico;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
-@RequestMapping("medico")
+@RequestMapping("/medico")
 public class MedicoController {
 
     final MedicoGateway medicoGateway;
@@ -28,25 +27,44 @@ public class MedicoController {
     }
 
     @PostMapping
-    public void cadastrar(@RequestBody @Valid DadosCadastroMedico dadosCadastroMedico){
+    public ResponseEntity create(@RequestBody @Valid DadosCadastroMedico dadosCadastroMedico, UriComponentsBuilder uriComponentsBuilder){
         var medico = MedicoBuilder.fromRequestToDomain(dadosCadastroMedico);
         medicoUseCase.create(medico, medicoGateway);
+
+        var uri = uriComponentsBuilder.path("/medico/{id}").buildAndExpand(medico.getId()).toUri();
+
+        return ResponseEntity.created(uri).body(MedicoBuilder.fromDomainToDetail(medico));
     }
 
     @GetMapping
-    public Page<DadosResponseMedico> findAll(@PageableDefault(sort = {"nome"}) Pageable page){
+    public ResponseEntity<Page<DadosResponseMedico>> findAll(@PageableDefault(sort = {"nome"}) Pageable page){
         var medico = medicoUseCase.findAll(medicoGateway, page);
 
-        return medico.map(MedicoBuilder::fromDomainToResponse);
+        var retorno = medico.map(MedicoBuilder::fromDomainToResponse);
+
+        return ResponseEntity.ok(retorno);
     }
 
     @PutMapping
-    public void atualizar(){
+    public ResponseEntity update(@RequestBody @Valid DadosAtualizarMedico dados){
+        var medico = medicoUseCase.getReferenceById(dados.id(), medicoGateway);
 
+        medicoUseCase.atualizar(medico, dados);
+
+        return ResponseEntity.ok(MedicoBuilder.fromDomainToDetail(medico));
     }
 
     @DeleteMapping("/{id}")
-    public void excluir(@PathVariable Long id) {
+    public ResponseEntity delete(@PathVariable Long id) {
+        medicoUseCase.delete(id, medicoGateway);
 
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity detail(@PathVariable Long id) {
+        var medico = medicoUseCase.getReferenceById(id, medicoGateway);
+
+        return ResponseEntity.ok(MedicoBuilder.fromDomainToDetail(medico));
     }
 }

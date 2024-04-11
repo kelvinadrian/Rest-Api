@@ -1,6 +1,7 @@
 package com.curso.api.adapters.builders;
 
 import com.curso.api.adapters.dto.request.DadosCadastroMedico;
+import com.curso.api.adapters.dto.response.DadosDetalheMedico;
 import com.curso.api.adapters.dto.response.DadosResponseMedico;
 import com.curso.api.core.entity.Endereco;
 import com.curso.api.core.entity.Medico;
@@ -34,6 +35,17 @@ public class MedicoBuilder {
                 .email(medico.getEmail())
                 .nome(medico.getNome())
                 .especialidade(medico.getEspecialidade())
+                .build();
+    }
+
+    public static DadosDetalheMedico fromDomainToDetail(Medico medico){
+        return DadosDetalheMedico.builder()
+                .nome(medico.getNome())
+                .email(medico.getEmail())
+                .telefone(medico.getTelefone())
+                .crm(medico.getCrm())
+                .especialidade(medico.getEspecialidade())
+                .endereco(medico.getEndereco())
                 .build();
     }
 }
