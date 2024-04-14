@@ -1,0 +1,1 @@
+alter table usuario add nome varchar(255) not null;

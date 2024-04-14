@@ -24,6 +24,7 @@ public class Usuario implements UserDetails {
     Long id;
     String username;
     String password;
+    String nome;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

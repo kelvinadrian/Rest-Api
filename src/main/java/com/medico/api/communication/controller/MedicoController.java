@@ -6,6 +6,7 @@ import com.medico.api.adapters.dto.request.DadosCadastroMedico;
 import com.medico.api.adapters.dto.response.DadosResponseMedico;
 import com.medico.api.adapters.interfaces.gateway.MedicoGateway;
 import com.medico.api.adapters.interfaces.usecases.MedicoUseCase;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/medico")
+@SecurityRequirement(name = "bearer-key")
 public class MedicoController {
 
     final MedicoGateway medicoGateway;
